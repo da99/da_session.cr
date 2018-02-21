@@ -6,6 +6,9 @@ require "openssl/hmac"
 
 class DA_Session
 
+  class Invalid_Secret < Exception
+  end
+
   # =============================================================================
   # Instance
   # =============================================================================
@@ -19,7 +22,7 @@ class DA_Session
   getter secure      : Bool
   getter lifespan    : Time::Span
   getter cookie_name : String
-  getter doman       : String?
+  getter domain      : String?
   getter path        : String
 
   def initialize(
@@ -28,9 +31,12 @@ class DA_Session
     @secure      = true,
     @lifespan    = 1.hour,
     @cookie_name = "da_session_id",
-    @doman       = nil,
+    @domain      = nil,
     @path        = "/"
   )
+    if secret.size < 10
+      raise Invalid_Secret.new("Secret size is too small")
+    end
     @is_in_client = false
     @is_deleted   = false
     @is_new       = false
@@ -99,13 +105,13 @@ class DA_Session
     _id = @id = Random::Secure.hex
 
     @context.response.cookies << HTTP::Cookie.new(
-      name:      config.cookie_name,
+      name:      cookie_name,
       value:     "#{_id},#{encoded_id(_id)}",
       expires:   Time.now.to_utc + @lifespan,
       http_only: true,
-      secure:    @secure,
-      path:      @path,
-      domain:    @domain
+      secure:    secure,
+      path:      path,
+      domain:    domain
     )
 
     @is_new = true
