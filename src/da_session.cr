@@ -62,6 +62,10 @@ class DA_Session
     @is_deleted
   end
 
+  def encoded_id
+    encoded_id(@id.not_nil!)
+  end # === def encoded_id
+
   def encoded_id(sess_id : String)
     OpenSSL::HMAC.hexdigest(:sha512, secret, sess_id)
   end

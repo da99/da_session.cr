@@ -80,11 +80,22 @@ end # === desc "secret"
 
 describe ".load" do
 
+  it "should load the session from the cookie if valid" do
+    sess = new_session
+    sess.save
+    m = member(cookie_value: "#{sess.id},#{sess.encoded_id}")
+
+    actual_session = new_session(m)
+    actual_session.load
+    assert actual_session.id == sess.id
+    assert actual_session.encoded_id == sess.encoded_id
+  end # === it "should load the session from the cookie if valid"
+
   it "should mark the session (:deleted? == true) if signed token was tampered" do
     sess = new_session
     sess.save
     id  = sess.id
-    val = "abc#{sess.encoded_id(id)[3..-1]}"
+    val = "abc#{sess.encoded_id[3..-1]}"
     m   = member(cookie_value: "#{id},#{val}")
 
     actual = new_session(m)
@@ -96,7 +107,7 @@ describe ".load" do
     sess = new_session
     sess.save
     id  = sess.id
-    val = "abc#{sess.encoded_id(id)[3..-1]}"
+    val = "abc#{sess.encoded_id[3..-1]}"
     m   = member(cookie_value: "#{id},#{val}")
 
     actual = new_session(m)
@@ -111,7 +122,7 @@ describe ".encoded_id" do
   it "should use the same session_id" do
     sess = new_session
     sess.save
-    assert sess.encoded_id(sess.id) == new_session.encoded_id(sess.id)
+    assert sess.encoded_id == new_session.encoded_id(sess.id)
   end
 
 end # === desc "DA_Session"
