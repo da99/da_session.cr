@@ -24,7 +24,12 @@ very little similarity with `kemal-session`.
 
   if my_session.in_client? # Cookie is in the browser.
     sess_id = my_session.id
-    # Retrieve from your data store
+    if my_session.deleted?
+      # The session was invalid
+      # Destroy the session in your own data store.
+    else
+      # Retrieve from your data store
+    end
   else # Cookie doesn't exist.
     my_session.save
     # Create a new session.

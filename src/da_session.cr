@@ -14,17 +14,25 @@ class DA_Session
 
   getter id : String? = nil
 
+  getter context     : HTTP::Server::Context
+  getter secret      : String
+  getter secure      : Bool
+  getter lifespan    : Time::Span
+  getter cookie_name : String
+  getter doman       : String?
+  getter path        : String
+
   def initialize(
-    @context     : HTTP::Server::Context,
-    @secret      : String     = "",
-    @secure      : Bool       = true,
-    @lifespan    : Time::Span = 1.hour,
-    @cookie_name : String     = "da_session_id",
-    @doman       : String?    = nil,
-    @path        : String     = "/"
+    @context,
+    @secret      = "",
+    @secure      = true,
+    @lifespan    = 1.hour,
+    @cookie_name = "da_session_id",
+    @doman       = nil,
+    @path        = "/"
   )
     @is_in_client = false
-    @is_deleted = false
+    @is_deleted   = false
     @is_new       = false
   end
 
