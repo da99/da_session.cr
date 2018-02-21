@@ -3,8 +3,7 @@ da\_session.cr
 ==============
 
 My personal shard I use for Crystal web apps.
-It's set for Redis and `opinionated` for my
-needs only.
+It's `opinionated` for my needs only.
 
 I forked `kemal-session`, then I rewrote the
 code for simplicity. At this point, there is

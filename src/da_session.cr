@@ -28,6 +28,10 @@ class DA_Session
     @is_new       = false
   end
 
+  def id
+    @id.not_nil!
+  end
+
   def id?
     (@id || "").size == ID_SIZE
   end
