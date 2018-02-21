@@ -16,10 +16,10 @@ class DA_Session
 
   def initialize(
     @context     : HTTP::Server::Context,
+    @secret      : String     = "",
+    @secure      : Bool       = true,
     @lifespan    : Time::Span = 1.hour,
     @cookie_name : String     = "da_session_id",
-    @secret      : String     = "",
-    @secure      : Bool       = false,
     @doman       : String?    = nil,
     @path        : String     = "/"
   )
@@ -73,6 +73,8 @@ class DA_Session
     else
       delete
     end
+
+    in_client?
   end
 
   def save
@@ -99,7 +101,7 @@ class DA_Session
     )
 
     @is_new = true
-    true
+    new?
   end
 
   def delete
