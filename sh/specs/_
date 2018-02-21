@@ -15,7 +15,8 @@ fi
 case "$ACTION" in
 
   watch)
-    process watch "-r ./" "da_session.cr specs run"
+    local +x CMD="da_session.cr specs run"
+    process watch "-r ./" "$CMD"
     ;;
 
   run)

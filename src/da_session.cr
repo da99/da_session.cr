@@ -68,8 +68,11 @@ class DA_Session
 
   def load
     cookie_value  = context.request.cookies[cookie_name]?.try(&.value)
+
     @is_in_client = cookie_value.is_a?(String)
     return false if !in_client?
+    return false if !cookie_value.is_a?(String)
+
 
     # Is the session valid?
     parts = cookie_value.split(",")
@@ -119,7 +122,7 @@ class DA_Session
   end
 
   def delete
-    context.response.cookies[cookie_name].value = ""
+    context.response.cookies << HTTP::Cookie.new(cookie_name, "")
     @is_deleted = true
     nil
   end

@@ -1,4 +1,5 @@
 require "da_spec"
+require "inspect_bang"
 require "../src/da_session"
 extend DA_SPEC
 
@@ -51,29 +52,50 @@ def member(
   )
 end # === def new_member
 
+describe "secret" do
 
-describe ".encoded_id" do
-  it "should use the same session_id" do
-    sess = new_session
-    sess.save
-    assert sess.encoded_id(sess.id) == new_session.encoded_id(sess.id)
-  end
-
-  it "should raise SecretRequiredException if secret is not set" do
+  it "should raise Invalid_Secret if secret is not set" do
     assert_raises(DA_Session::Invalid_Secret) do
       DA_Session.new( new_context, secret: "abc" )
     end
   end
 
-  it "should return a new session if signed token has been tampered" do
+end # === desc "secret"
+
+describe ".load" do
+
+  it "should delete the session if signed token was tampered" do
     sess = new_session
     sess.save
-    id = sess.id
+    id  = sess.id
     val = "abc#{sess.encoded_id(id)[3..-1]}"
-    m = member(cookie_value: "#{id},#{val}")
+    m   = member(cookie_value: "#{id},#{val}")
 
     actual = new_session(m)
+    actual.load
     assert actual.deleted? == true
+  end
+
+  it "should send a Cookie response of an empty string if signed token was tampered" do
+    sess = new_session
+    sess.save
+    id  = sess.id
+    val = "abc#{sess.encoded_id(id)[3..-1]}"
+    m   = member(cookie_value: "#{id},#{val}")
+
+    actual = new_session(m)
+    actual.load
+    assert m.response.cookies[sess.cookie_name].value == ""
+  end
+
+end # === desc ".load"
+
+describe ".encoded_id" do
+
+  it "should use the same session_id" do
+    sess = new_session
+    sess.save
+    assert sess.encoded_id(sess.id) == new_session.encoded_id(sess.id)
   end
 
 end # === desc "DA_Session"
