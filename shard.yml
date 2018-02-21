@@ -1,0 +1,5 @@
+name: da_session
+version: 0.0.0
+development_dependencies:
+  inspect_bang:
+    github: da99/inspect_bang.cr
