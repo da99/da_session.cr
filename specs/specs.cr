@@ -1,6 +1,11 @@
 require "da_spec"
 require "inspect_bang"
 require "../src/da_session"
+
+# =============================================================================
+# Helpers
+# =============================================================================
+
 extend DA_SPEC
 
 SECRET = "The cat nimbled my homeWork, Teach'."
@@ -52,7 +57,18 @@ def member(
   )
 end # === def new_member
 
-describe "secret" do
+# =============================================================================
+# Specifications
+# =============================================================================
+
+describe ".new(..)" do
+  it "should mark session as (:new? == false)" do
+    sess = new_session
+    assert sess.new? == false
+  end # === it "marks session as (:new? == false)"
+end # === desc ".new(..)"
+
+describe "attribute secret" do
 
   it "should raise Invalid_Secret if secret is not set" do
     assert_raises(DA_Session::Invalid_Secret) do
@@ -64,7 +80,7 @@ end # === desc "secret"
 
 describe ".load" do
 
-  it "should delete the session if signed token was tampered" do
+  it "should mark the session (:deleted? == true) if signed token was tampered" do
     sess = new_session
     sess.save
     id  = sess.id
@@ -99,4 +115,12 @@ describe ".encoded_id" do
   end
 
 end # === desc "DA_Session"
+
+describe ".save" do
+  it "should mark session as (:new? == true)" do
+    sess = new_session
+    sess.save
+    assert sess.new? == true
+  end # === it "should mark session as (:new? == true)"
+end # === desc ".save"
 

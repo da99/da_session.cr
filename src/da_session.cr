@@ -107,22 +107,26 @@ class DA_Session
 
     _id = @id = Random::Secure.hex
 
-    @context.response.cookies << HTTP::Cookie.new(
+    @context.response.cookies << new_cookie("#{_id},#{encoded_id(_id)}")
+
+    @is_new = true
+    new?
+  end
+
+  def new_cookie(value : String = "")
+    HTTP::Cookie.new(
       name:      cookie_name,
-      value:     "#{_id},#{encoded_id(_id)}",
+      value:     value,
       expires:   Time.now.to_utc + @lifespan,
       http_only: true,
       secure:    secure,
       path:      path,
       domain:    domain
     )
-
-    @is_new = true
-    new?
   end
 
   def delete
-    context.response.cookies << HTTP::Cookie.new(cookie_name, "")
+    context.response.cookies << new_cookie("")
     @is_deleted = true
     nil
   end
