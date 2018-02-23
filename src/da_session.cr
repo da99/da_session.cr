@@ -77,7 +77,6 @@ class DA_Session
     return false if !in_client?
     return false if !cookie_value.is_a?(String)
 
-
     # Is the session valid?
     parts = cookie_value.split(",")
     if !(parts.size == 2)
