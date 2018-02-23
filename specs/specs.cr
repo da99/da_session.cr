@@ -129,7 +129,7 @@ describe ".load" do
 
     actual = new_session(m)
     actual.load
-    assert actual.id.empty? == false
+    assert actual.id == sess.id
   end # === it "should retrieve :id from a valid session"
 
   it "should send a Cookie response of an empty string if signed token was tampered" do
