@@ -3,6 +3,7 @@ require "http"
 require "json"
 require "random/secure"
 require "openssl/hmac"
+require "crypto/subtle"
 
 class DA_Session
 
@@ -87,7 +88,8 @@ class DA_Session
     old_id   = parts[0]
     old_val  = parts[1]
     new_val  = encoded_id(old_id)
-    is_valid = (new_val == old_val && old_id.size == ID_SIZE)
+    # is_valid = old_id.size == ID_SIZE && Crypto::Subtle.constant_time(new_val, old_val)
+    is_valid = Crypto::Subtle.constant_time_compare(new_val, old_val)
     if is_valid
       @id = old_id
     else
