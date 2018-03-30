@@ -6,6 +6,9 @@ Reference:
   * https://codahale.com/a-lesson-in-timing-attacks/
   * http://devdocs.io/crystal/api/0.24.1/crypto/subtle#constant_time_compare(x,y):Bool-class-method
 
+* Cryptographic Signing:
+  * https://docs.djangoproject.com/en/dev/topics/signing/
+
 da\_session.cr
 ==============
 
